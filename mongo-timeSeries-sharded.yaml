@@ -1,0 +1,41 @@
+name: Mongo timeSeriesTest Sharded
+description: MongoDB sharded deployment with MongoDB (javascript) client
+#location: named:ec2_west
+location: localhost
+version: "2.4.9"
+services:
+- serviceType: brooklyn.entity.nosql.mongodb.sharding.MongoDBShardedDeployment
+  id: MongoDBShardedServer
+  name: MongoDB Sharded Deployment
+  brooklyn.config:
+    version: "2.4.9"
+    initialRouterClusterSize: 1
+    initialShardClusterSize: 1
+    shardReplicaSetSize: 1
+- serviceType: brooklyn.entity.nosql.mongodb.MongoDBClient
+  name: MongoDB Javascript Client
+  brooklyn.config:
+    version: "2.4.9"
+    shardedDeployment: $brooklyn:component("MongoDBShardedServer")
+    scripts:
+      insert: classpath://mongo-product-insert.js 
+      update: classpath://mongo-product-update.js
+      delete: classpath://mongo-product-delete.js
+      timeSeriesTest: classpath://timeSeriesTest.js
+      timeSeriesTestMongoDB: classpath://timeSeriesTestMongoDB.js
+      timeSeriesTestMongoDBLZ: classpath://timeSeriesTestMongoDBLZ.js
+      lz-string-1.3.3: classpath://lz-string-1.3.3.js
+      ts-b1000-z0: classpath://ts-b1000-z0.js
+      ts-b1000-z25: classpath://ts-b1000-z25.js
+      ts-b1000-z50: classpath://ts-b1000-z50.js
+      ts-b1000-z100: classpath://ts-b1000-z100.js
+      ts-b1000-z200: classpath://ts-b1000-z200.js
+      ts-b1000-z300: classpath://ts-b1000-z300.js
+      ts-b50000-z0: classpath://ts-b50000-z0.js
+      ts-b50000-z25: classpath://ts-b50000-z25.js
+      ts-b50000-z50: classpath://ts-b50000-z50.js
+      ts-b50000-z100: classpath://ts-b50000-z100.js
+      ts-b50000-z200: classpath://ts-b50000-z200.js
+      ts-b50000-z300: classpath://ts-b50000-z300.js
+    defaultScripts: # These will be run in order on startup
+      - ts-b1000-z25

@@ -1,0 +1,20 @@
+name: Mongo Index Testing Single Server
+description: MongoDB single server deployment with MongoDB (javascript) client
+#location: ec2_west
+location: localhost
+services:
+- serviceType: brooklyn.entity.nosql.mongodb.MongoDBServer
+  id: MongoDBSingleServer
+  name: MongoDB Single Server Deployment
+- serviceType: brooklyn.entity.nosql.mongodb.MongoDBClient
+  name: MongoDB Javascript Client
+  brooklyn.config:
+    server: $brooklyn:component("MongoDBSingleServer")
+    scripts:
+      mongo-index-load-wrapper: classpath://mongo-index-load-wrapper.js
+      mongo-index-query-wrapper: classpath://mongo-index-query-wrapper.js
+      mongo-index-load: classpath://mongo-index-load.js
+      mongo-index-query: classpath://mongo-index-query.js
+    startupJsScripts:
+      - mongo-index-load-wrapper
+      - mongo-index-query-wrapper
